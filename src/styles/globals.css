@@ -85,12 +85,13 @@ button {
 }
 
 .top-subtitle {
-  font-size: clamp(1.01rem, 3.92vw, 1.4rem);
+  font-size: clamp(0.91rem, 3.53vw, 1.26rem);
   color: #7dd3fc;
   opacity: 0.75;
   text-align: center;
   line-height: 1.5;
   margin-bottom: 0;
+  margin-left: -1em;
   letter-spacing: 0.04em;
   max-width: 100%;
 }

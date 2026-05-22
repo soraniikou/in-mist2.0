@@ -17,7 +17,7 @@ export default function TopScreen({ onPlace, onStay }: TopScreenProps) {
           <h1 className="top-title">in-mist</h1>
           <p className="top-subtitle">
             <span className="top-subtitle-line">向き合うことも逃げることも、</span>
-            <span className="top-subtitle-line">間違いじゃなかった。</span>
+            <span className="top-subtitle-line">間違いじゃなかった</span>
           </p>
         </div>
         <div className="top-buttons">
@@ -25,7 +25,7 @@ export default function TopScreen({ onPlace, onStay }: TopScreenProps) {
             ざわつく気持ちを書いてください
           </button>
           <button type="button" className="entry-btn" onClick={onStay}>
-            ここにいるだけでいい。
+            ここにいるだけでいい
           </button>
         </div>
         </div>
