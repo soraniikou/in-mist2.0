@@ -228,7 +228,7 @@ button {
   font-family: 'Noto Serif JP', serif;
   font-size: 24px;
   line-height: 1.6;
-  color: rgba(125, 211, 252, 0.38);
+  color: rgba(125, 211, 252, 0.48);
   pointer-events: none;
   animation: place-cursor-blink 1.1s step-end infinite;
 }
@@ -236,11 +236,11 @@ button {
 @keyframes place-cursor-blink {
   0%,
   55% {
-    opacity: 0.2;
+    opacity: 0.28;
   }
   56%,
   100% {
-    opacity: 0.45;
+    opacity: 0.58;
   }
 }
 
