@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { playMistAudio } from '../lib/mistAudio'
 import MistCanvas from './MistCanvas'
 
 interface StayScreenProps {
@@ -23,6 +24,14 @@ interface RiseParticle {
   vy: number
   opacity: number
 }
+
+interface Ripple {
+  id: number
+  x: number
+  y: number
+}
+
+const RIPPLE_DURATION_MS = 8400
 
 const RINGS: RingDef[] = [
   { id: 'oya', message: '痛かったね　頑張って生きてきたね', offset: 0 },
@@ -57,9 +66,12 @@ export default function StayScreen({ onBack }: StayScreenProps) {
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const rippleIdRef = useRef(0)
+
   const [activeMessage, setActiveMessage] = useState<string | null>(null)
   const [messageOpacity, setMessageOpacity] = useState(0)
   const [fading, setFading] = useState(false)
+  const [ripples, setRipples] = useState<Ripple[]>([])
 
   const clearTimers = useCallback(() => {
     if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
@@ -114,10 +126,26 @@ export default function StayScreen({ onBack }: StayScreenProps) {
     [clearTimers],
   )
 
-  const hitRing = useCallback(
+  const spawnRipple = useCallback((x: number, y: number) => {
+    const id = ++rippleIdRef.current
+    setRipples((prev) => [...prev, { id, x, y }])
+    setTimeout(() => {
+      setRipples((prev) => prev.filter((r) => r.id !== id))
+    }, RIPPLE_DURATION_MS)
+  }, [])
+
+  const handleBackgroundTap = useCallback(
     (x: number, y: number) => {
+      spawnRipple(x, y)
+      playMistAudio()
+    },
+    [spawnRipple],
+  )
+
+  const hitRing = useCallback(
+    (x: number, y: number): boolean => {
       const { w, h } = sizeRef.current
-      if (w <= 0 || h <= 0) return
+      if (w <= 0 || h <= 0) return false
       const layout = getRingLayout(w, h)
       const fc = frameCountRef.current
       for (const ring of layout) {
@@ -127,9 +155,10 @@ export default function StayScreen({ onBack }: StayScreenProps) {
         const dy = (y - cy) / RING_RY
         if (dx * dx + dy * dy <= 1.15) {
           showMessage(ring, ring.cx, cy)
-          return
+          return true
         }
       }
+      return false
     },
     [getRingLayout, showMessage],
   )
@@ -272,7 +301,9 @@ export default function StayScreen({ onBack }: StayScreenProps) {
     if ((e.target as HTMLElement).closest('.back-link, .stay-message')) return
     const rect = containerRef.current?.getBoundingClientRect()
     if (!rect) return
-    hitRing(e.clientX - rect.left, e.clientY - rect.top)
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    if (!hitRing(x, y)) handleBackgroundTap(x, y)
   }
 
   return (
@@ -282,6 +313,15 @@ export default function StayScreen({ onBack }: StayScreenProps) {
       </div>
       <div ref={containerRef} className="stay-canvas-wrap">
         <canvas ref={canvasRef} className="stay-canvas" />
+      </div>
+      <div className="mist-ripples" aria-hidden>
+        {ripples.map((r) => (
+          <span
+            key={r.id}
+            className="mist-ripple"
+            style={{ left: r.x, top: r.y }}
+          />
+        ))}
       </div>
       <p className="stay-hint">触れてみて</p>
       {activeMessage && (

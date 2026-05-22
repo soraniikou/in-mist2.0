@@ -341,3 +341,46 @@ button {
   letter-spacing: 0.084em;
   pointer-events: none;
 }
+
+.mist-ripples {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mist-ripple {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 2px solid rgba(240, 252, 255, 0.95);
+  border-radius: 50%;
+  box-shadow:
+    0 0 12px rgba(186, 230, 253, 0.9),
+    0 0 28px rgba(125, 211, 252, 0.65),
+    0 0 48px rgba(125, 211, 252, 0.35),
+    inset 0 0 16px rgba(224, 242, 254, 0.25);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: mist-ripple-expand 8.4s ease-out forwards;
+}
+
+@keyframes mist-ripple-expand {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.95;
+    box-shadow:
+      0 0 8px rgba(224, 242, 254, 0.9),
+      0 0 20px rgba(125, 211, 252, 0.7);
+  }
+  100% {
+    width: 80vw;
+    height: 80vw;
+    opacity: 0;
+    box-shadow:
+      0 0 24px rgba(186, 230, 253, 0.5),
+      0 0 56px rgba(125, 211, 252, 0.25);
+  }
+}
