@@ -62,7 +62,7 @@ button {
   justify-content: flex-start;
   padding-top: 18vh;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
@@ -77,13 +77,16 @@ button {
 }
 
 .top-subtitle {
-  font-size: clamp(0.85rem, 3.5vw, 1rem);
+  font-size: clamp(0.72rem, 2.8vw, 1rem);
   color: #7dd3fc;
   opacity: 0.75;
   text-align: center;
-  line-height: 1.9;
+  line-height: 1.5;
   margin-bottom: 3.5rem;
   letter-spacing: 0.04em;
+  white-space: nowrap;
+  width: max-content;
+  max-width: 100%;
 }
 
 .top-buttons {
@@ -303,6 +306,6 @@ button {
   font-size: 22px;
   color: #e0f2fe;
   line-height: 1.9;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.084em;
   pointer-events: none;
 }
