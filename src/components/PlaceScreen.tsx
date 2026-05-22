@@ -11,6 +11,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
   const [mode, setMode] = useState<Mode>('words')
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const drawContainerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const drawingRef = useRef(false)
@@ -20,6 +21,17 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
 
   const canSend =
     mode === 'words' ? text.trim().length > 0 : hasDrawnRef.current
+
+  const adjustTextareaHeight = useCallback(() => {
+    const ta = textareaRef.current
+    if (!ta) return
+    ta.style.height = 'auto'
+    ta.style.height = `${ta.scrollHeight}px`
+  }, [])
+
+  useEffect(() => {
+    if (mode === 'words') adjustTextareaHeight()
+  }, [text, mode, adjustTextareaHeight])
 
   const initDrawCanvas = useCallback(() => {
     const container = drawContainerRef.current
@@ -78,6 +90,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
   }
 
   const startDraw = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (sending) return
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
@@ -93,7 +106,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
   }
 
   const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!drawingRef.current) return
+    if (!drawingRef.current || sending) return
     const ctx = canvasRef.current?.getContext('2d')
     if (!ctx) return
     const { x, y } = getPoint(e)
@@ -113,6 +126,12 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
     if (!canSend || sending) return
     setSending(true)
     setTimeout(() => {
+      setText('')
+      const canvas = canvasRef.current
+      const ctx = canvas?.getContext('2d')
+      const { w, h } = sizeRef.current
+      if (ctx && w > 0 && h > 0) ctx.clearRect(0, 0, w, h)
+      hasDrawnRef.current = false
       onBack()
     }, 3000)
   }
@@ -125,14 +144,13 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
       <button type="button" className="back-link" onClick={onBack}>
         もどる
       </button>
-      <div
-        className={`ui-layer place-content place-fade${sending ? ' sending' : ''}`}
-      >
-        <div className="mode-toggle">
+      <div className="ui-layer place-layout">
+        <div className="mode-toggle place-mode-toggle">
           <button
             type="button"
             className={mode === 'words' ? 'active' : ''}
             onClick={() => setMode('words')}
+            disabled={sending}
           >
             言葉で
           </button>
@@ -140,39 +158,46 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
             type="button"
             className={mode === 'shape' ? 'active' : ''}
             onClick={() => setMode('shape')}
+            disabled={sending}
           >
             かたちで
           </button>
         </div>
 
-        <div className="place-area">
-          {mode === 'words' ? (
-            <textarea
-              className="place-textarea"
-              placeholder=""
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              disabled={sending}
-            />
-          ) : (
-            <div ref={drawContainerRef} className="draw-canvas-wrap">
-              <canvas
-                ref={canvasRef}
-                className="draw-canvas"
-                onPointerDown={startDraw}
-                onPointerMove={draw}
-                onPointerUp={endDraw}
-                onPointerLeave={endDraw}
+        <div className="place-center">
+          <div
+            className={`place-float${sending ? ' place-input-fade sending' : ''}`}
+          >
+            {mode === 'words' ? (
+              <textarea
+                ref={textareaRef}
+                className="place-textarea"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onInput={adjustTextareaHeight}
+                disabled={sending}
+                rows={1}
               />
-            </div>
-          )}
+            ) : (
+              <div ref={drawContainerRef} className="draw-canvas-wrap">
+                <canvas
+                  ref={canvasRef}
+                  className="draw-canvas"
+                  onPointerDown={startDraw}
+                  onPointerMove={draw}
+                  onPointerUp={endDraw}
+                  onPointerLeave={endDraw}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <button
           type="button"
-          className="send-btn"
+          className={`send-btn place-send-btn${canSend ? '' : ' send-btn--dim'}`}
           onClick={handleSend}
-          disabled={!canSend || sending}
+          disabled={sending}
         >
           霧に送る
         </button>
