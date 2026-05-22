@@ -336,10 +336,18 @@ button {
   text-align: center;
   font-family: 'Noto Serif JP', serif;
   font-size: 22px;
-  color: #e0f2fe;
+  color: #c5dae8;
   line-height: 1.9;
   letter-spacing: 0.084em;
   pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .stay-message.stay-message--oya-mobile {
+    white-space: nowrap;
+    font-size: clamp(13px, 3.8vw, 17px);
+    letter-spacing: 0.03em;
+  }
 }
 
 .mist-ripples {

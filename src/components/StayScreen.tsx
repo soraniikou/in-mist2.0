@@ -33,8 +33,10 @@ interface Ripple {
 
 const RIPPLE_DURATION_MS = 25200
 
+const OYA_MESSAGE = '痛かったね　頑張って生きてきたね'
+
 const RINGS: RingDef[] = [
-  { id: 'oya', message: '痛かったね　頑張って生きてきたね', offset: 0 },
+  { id: 'oya', message: OYA_MESSAGE, offset: 0 },
   { id: 'hito', message: '今日は今日でおしまい', offset: 1.2 },
   { id: 'naka', message: '手放してみますか？', offset: 2.4 },
   { id: 'kusuri', message: '痛みがあるのは優しいからだよ', offset: 3.6 },
@@ -326,7 +328,7 @@ export default function StayScreen({ onBack }: StayScreenProps) {
       <p className="stay-hint">触れてみて</p>
       {activeMessage && (
         <p
-          className="stay-message"
+          className={`stay-message${activeMessage === OYA_MESSAGE ? ' stay-message--oya-mobile' : ''}`}
           style={{ opacity: messageOpacity }}
         >
           {activeMessage}
