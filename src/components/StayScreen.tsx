@@ -342,7 +342,7 @@ export default function StayScreen({ onBack }: StayScreenProps) {
           onBack()
         }}
       >
-        もどる
+        back
       </button>
     </div>
   )

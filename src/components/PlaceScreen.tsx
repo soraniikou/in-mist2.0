@@ -142,7 +142,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
         <MistCanvas particleCount={45} />
       </div>
       <button type="button" className="back-link" onClick={onBack}>
-        もどる
+        back
       </button>
       <div className="ui-layer place-layout">
         <div className="mode-toggle place-mode-toggle">

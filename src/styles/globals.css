@@ -313,15 +313,15 @@ button {
   right: 1.25rem;
   z-index: 2;
   font-size: 0.8rem;
-  color: #7dd3fc;
-  opacity: 0.3;
+  color: #a8e4fc;
+  opacity: 0.52;
   letter-spacing: 0.1em;
   padding: 0.4rem 0.6rem;
   transition: opacity 0.3s;
 }
 
 .back-link:hover {
-  opacity: 0.55;
+  opacity: 0.72;
 }
 
 /* Stay screen */
