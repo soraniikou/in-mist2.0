@@ -76,6 +76,6 @@ export function playMistAudio(): void {
   const audio = new Audio(`/audio/in-mist${n}.mp3`)
   audio.volume = BASE_VOLUME
   currentAudio = audio
-  attachFadeHandlers(audio)
+  if (n === 8) attachFadeHandlers(audio)
   void audio.play()
 }
