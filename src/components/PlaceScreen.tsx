@@ -33,6 +33,12 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
     if (mode === 'words') adjustTextareaHeight()
   }, [text, mode, adjustTextareaHeight])
 
+  useEffect(() => {
+    if (mode === 'words' && !sending) {
+      textareaRef.current?.focus()
+    }
+  }, [mode, sending])
+
   const initDrawCanvas = useCallback(() => {
     const container = drawContainerRef.current
     const canvas = canvasRef.current
@@ -152,7 +158,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
             onClick={() => setMode('words')}
             disabled={sending}
           >
-            言葉で
+            言葉で書いて
           </button>
           <button
             type="button"
@@ -160,7 +166,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
             onClick={() => setMode('shape')}
             disabled={sending}
           >
-            かたちで
+            かたちで書いて
           </button>
         </div>
 
@@ -169,15 +175,22 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
             className={`place-float${sending ? ' place-input-fade sending' : ''}`}
           >
             {mode === 'words' ? (
-              <textarea
-                ref={textareaRef}
-                className="place-textarea"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onInput={adjustTextareaHeight}
-                disabled={sending}
-                rows={1}
-              />
+              <div className="place-textarea-wrap">
+                <textarea
+                  ref={textareaRef}
+                  className={`place-textarea${text ? '' : ' place-textarea--empty'}`}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  onInput={adjustTextareaHeight}
+                  disabled={sending}
+                  rows={1}
+                />
+                {!text && !sending && (
+                  <span className="place-text-cursor" aria-hidden>
+                    |
+                  </span>
+                )}
+              </div>
             ) : (
               <div ref={drawContainerRef} className="draw-canvas-wrap">
                 <canvas
