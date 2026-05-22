@@ -67,6 +67,14 @@ button {
   padding-right: 1.5rem;
 }
 
+.top-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 3.5rem;
+}
+
 .top-title {
   font-family: 'Noto Serif JP', serif;
   font-size: clamp(1.76rem, 6.4vw, 2.4rem);
@@ -77,16 +85,43 @@ button {
 }
 
 .top-subtitle {
-  font-size: clamp(1.44rem, 5.6vw, 2rem);
+  font-size: clamp(1.01rem, 3.92vw, 1.4rem);
   color: #7dd3fc;
   opacity: 0.75;
   text-align: center;
   line-height: 1.5;
-  margin-bottom: 3.5rem;
+  margin-bottom: 0;
   letter-spacing: 0.04em;
-  white-space: nowrap;
-  width: max-content;
   max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  .top-subtitle {
+    width: 100%;
+  }
+
+  .top-subtitle-line {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .top-header {
+    margin-bottom: 3.5rem;
+  }
+
+  .top-title {
+    margin-bottom: 0.75rem;
+  }
+
+  .top-subtitle {
+    white-space: nowrap;
+    width: max-content;
+  }
+
+  .top-subtitle-line {
+    display: inline;
+  }
 }
 
 .top-buttons {
