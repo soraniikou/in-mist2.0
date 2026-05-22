@@ -133,7 +133,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
       if (ctx && w > 0 && h > 0) ctx.clearRect(0, 0, w, h)
       hasDrawnRef.current = false
       onBack()
-    }, 3000)
+    }, 10000)
   }
 
   return (

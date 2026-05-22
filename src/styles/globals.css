@@ -264,7 +264,7 @@ button {
 }
 
 .place-input-fade {
-  transition: opacity 3s ease;
+  transition: opacity 10s ease;
 }
 
 .place-input-fade.sending {
