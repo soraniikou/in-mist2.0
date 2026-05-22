@@ -31,7 +31,7 @@ interface Ripple {
   y: number
 }
 
-const RIPPLE_DURATION_MS = 8400
+const RIPPLE_DURATION_MS = 25200
 
 const RINGS: RingDef[] = [
   { id: 'oya', message: '痛かったね　頑張って生きてきたね', offset: 0 },
