@@ -17,10 +17,10 @@ export default function TopScreen({ onPlace, onStay }: TopScreenProps) {
         <p className="top-subtitle">向き合うことも逃げることも、間違いじゃなかった。</p>
         <div className="top-buttons">
           <button type="button" className="entry-btn" onClick={onPlace}>
-            【ここに置いてください。】
+            ざわつく気持ちを書いてください
           </button>
           <button type="button" className="entry-btn" onClick={onStay}>
-            【ここにいるだけでいい。】
+            ここにいるだけでいい。
           </button>
         </div>
         </div>
