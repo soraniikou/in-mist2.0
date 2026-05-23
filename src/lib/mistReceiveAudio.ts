@@ -1,32 +1,16 @@
-const TRACK_COUNT = 8
-const FADE_DURATION = 1.0
-const BASE_VOLUME = Math.min(1, 0.85 * 1.4)
+import { stopMistTapAudio } from './mistAudio'
 
-let deck: number[] = []
-let lastPlayed: number | undefined
-let currentAudio: HTMLAudioElement | null = null
+const RECEIVE_KEY = 'inMistReceiveCount'
+const RECEIVE_COUNT = 3
+const FADE_DURATION = 1.0
+const BASE_VOLUME = 0.85
+
+let currentReceiveAudio: HTMLAudioElement | null = null
 
 const fadeHandlers = new WeakMap<
   HTMLAudioElement,
   { onTimeUpdate: () => void; onEnded: () => void }
 >()
-
-function shuffleDeck(avoidFirst?: number): number[] {
-  const arr = Array.from({ length: TRACK_COUNT }, (_, i) => i + 1)
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[arr[i], arr[j]] = [arr[j], arr[i]]
-  }
-  if (avoidFirst !== undefined && arr.length > 1 && arr[0] === avoidFirst) {
-    const swap = 1 + Math.floor(Math.random() * (arr.length - 1))
-    ;[arr[0], arr[swap]] = [arr[swap], arr[0]]
-  }
-  return arr
-}
-
-function refillDeck() {
-  deck = shuffleDeck(lastPlayed)
-}
 
 function detachFadeHandlers(audio: HTMLAudioElement) {
   const handlers = fadeHandlers.get(audio)
@@ -48,7 +32,7 @@ function attachFadeHandlers(audio: HTMLAudioElement) {
 
   const onEnded = () => {
     audio.volume = 0
-    if (currentAudio === audio) currentAudio = null
+    if (currentReceiveAudio === audio) currentReceiveAudio = null
     detachFadeHandlers(audio)
   }
 
@@ -57,25 +41,27 @@ function attachFadeHandlers(audio: HTMLAudioElement) {
   fadeHandlers.set(audio, { onTimeUpdate, onEnded })
 }
 
-export function stopMistTapAudio() {
-  if (!currentAudio) return
-  const audio = currentAudio
+function stopReceiveAudio() {
+  if (!currentReceiveAudio) return
+  const audio = currentReceiveAudio
   audio.pause()
   detachFadeHandlers(audio)
-  currentAudio = null
+  currentReceiveAudio = null
 }
 
-export function playMistAudio(): void {
-  if (deck.length === 0) refillDeck()
-
-  const n = deck.shift()!
-  lastPlayed = n
-
+export function playReceiveVoice(): void {
   stopMistTapAudio()
+  stopReceiveAudio()
 
-  const audio = new Audio(`/audio/in-mist${n}.mp3`)
+  const countStr = localStorage.getItem(RECEIVE_KEY)
+  const count = countStr ? parseInt(countStr, 10) : 0
+  const index = (count % RECEIVE_COUNT) + 1
+
+  const audio = new Audio(`/audio/in-mist-receive${index}.mp3`)
   audio.volume = BASE_VOLUME
-  currentAudio = audio
+  currentReceiveAudio = audio
   attachFadeHandlers(audio)
   void audio.play()
+
+  localStorage.setItem(RECEIVE_KEY, String(count + 1))
 }

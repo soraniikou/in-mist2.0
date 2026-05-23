@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { playReceiveVoice } from '../lib/mistReceiveAudio'
 import MistCanvas from './MistCanvas'
 
 type Mode = 'words' | 'shape'
@@ -130,6 +131,7 @@ export default function PlaceScreen({ onBack }: PlaceScreenProps) {
 
   const handleSend = () => {
     if (!canSend || sending) return
+    playReceiveVoice()
     setSending(true)
     setTimeout(() => {
       setText('')
